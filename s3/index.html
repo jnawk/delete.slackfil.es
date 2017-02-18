@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Delete.SlackFil.es</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <style>
+    input {
+        width: 100%;
+    }
+    
+    .row {
+        margin-top: 5px;
+    }
+    
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    
+    body {
+        max-width: 1200px;
+    }
+    
+    .panel-info {
+        border-color: #000000;
+    }
+    </style>
+</head>
+
+<body>
+    <form action="#" id="form">
+        <div class="col-lg-10 col-lg-offset-1">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Delete.SlackFil.es</h1>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 id="welcome" class="panel-title">Welcome!</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-3">Team</div>
+                                <div id="team" class="col-lg-3"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">Keep files newer than</div>
+                                <div class="col-lg-3">
+                                    <input id="days" placeholder="days" type="number" min="0" value="90">
+                                </div>
+                                <div class="col-lg-3">days</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">Keep files with</div>
+                                <div class="col-lg-3">
+                                    <input id="stars" placeholder="stars" type="number" min="1" value="5">
+                                </div>
+                                <div class="col-lg-3">or more stars</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">Save files matching this</div>
+                                <div class="col-lg-3">
+                                    <input id="savePattern" placeholder="pattern1|pattern2" value='saveme|dontdeleteme'>
+                                </div>
+                                <div class="col-lg-3">regular expression</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <button type="button" class="btn btn-primary" style="width:100%" id="delete">Let&apos;s do this!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" id="dummySubmit" style="display:none">
+    </form>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!--<script src="https://websanova.com/lib/url-tld.2.1.0.min.js"></script>-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    function login() {
+        window.location.href = '/api/login';
+    }
+
+    function deleteFiles(files) {
+        if(files.length > 0) {
+            var id = files.pop();
+            $.ajax({
+                url: '/api/files/' + id,
+                method: 'DELETE',
+                success: function() {
+                    deleteFiles(files);
+                }
+            });
+        }
+    }
+
+    function doDelete() {
+        var days = parseInt($('#days').val());
+        var stars = parseInt($('#stars').val());
+        var savePattern = encodeURIComponent($('#savePattern').val());
+
+        var queryString = '?days=' + ( isNaN(days) ? '' : days ) + '&stars=' + ( isNaN(stars) ? '' : stars ) + '&savePattern=' + savePattern;        
+
+        $.ajax({
+            url: '/api/files' + queryString,
+            statusCode: {
+                200: function(data) {
+                    console.log(data.length + ' files to delete');
+                    deleteFiles(data);
+                },
+                401: login
+            }
+        });
+    }
+    $(function() {
+        $('#delete').click(doDelete);
+        $.ajax({
+            statusCode: {
+                200: function(data) {
+                    $('#welcome').text("Welcome, " + data.user);
+                    $('#team').text(data.team);
+                },
+                401: login
+            },
+            url: '/api/team'
+        });
+    });
+    </script>
+</body>
