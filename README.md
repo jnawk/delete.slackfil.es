@@ -36,6 +36,7 @@ Runs on AWS Lambda / API Gateway, with Cloudfront sitting in front (ie, no CORS)
 # How it works
 * OAuths against Slack.
 * Stores the slack token encrypted in a browser cookie.
+    * The encryption / decryption code is a bit of a cop-out - it should use AWS IAM KMS, but at $1 _per month_ on top of the rest of the charges, it seems a bit rich.   (NB: It's AES-256-CTR - while it's a cop-out, it's not insecure).
 * When the 'go' button is pressed, the browser asks the back end for a list of file IDs to delete.  The back end filters out files that should not be deleted. 
 * The browser then submits a request to delete each file, one by one.  (To hopefully not overwhelm slack).
 
@@ -44,3 +45,5 @@ Runs on AWS Lambda / API Gateway, with Cloudfront sitting in front (ie, no CORS)
 * Currently no way to log out (ie, clear the cookie)
 * The 'go' button is active before the team info has been retrieved (the cookie might not exist or be valid; login will be required).
 * Once the 'go' button is pressed, there is no feedback, nor any way to abort, abort, ABORT!
+* Cloudformation?
+* Serverless?
