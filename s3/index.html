@@ -132,7 +132,7 @@
             statusCode: {
                 200: function(data) {
                     $('#welcome').text("Welcome, " + data.user);
-                    $('#team').text(data.team);
+                    $('#team').text(data.team.name);
                 },
                 401: login
             },
