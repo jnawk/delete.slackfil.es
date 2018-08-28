@@ -42,8 +42,6 @@ Runs on AWS Lambda / API Gateway, with Cloudfront sitting in front (ie, no CORS)
 
 # Wishlist
 * Currently the cookie has no expiry, and is not a session cookie, nor is it HTTPonly.
-* Currently no way to log out (ie, clear the cookie)
-* The 'go' button is active before the team info has been retrieved (the cookie might not exist or be valid; login will be required).
 * Once the 'go' button is pressed, there is no feedback, nor any way to abort, abort, ABORT!
 * Cloudformation?
 * Serverless?
