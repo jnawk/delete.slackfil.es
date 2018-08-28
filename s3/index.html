@@ -77,7 +77,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <button type="button" class="btn btn-primary" style="width:100%" id="delete">Let&apos;s do this!</button>
+                                    <button type="button" class="btn btn-primary" style="width:100%" disabled id="delete">Loading team...</button>
                                 </div>
                                 <div class="col-lg-3">
                                     <button type="button" class="btn btn-primary" style="width:100%" id="login">Change team</button>
@@ -137,6 +137,8 @@
                 200: function(data) {
                     $('#welcome').text("Welcome, " + data.user);
                     $('#team').text(data.team.name);
+                    $('#delete').text('Let&apos;s do this!');
+                    $('#delete').prop('disabled', false);
                 },
                 401: login
             },
