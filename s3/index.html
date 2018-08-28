@@ -79,6 +79,9 @@
                                 <div class="col-lg-3">
                                     <button type="button" class="btn btn-primary" style="width:100%" id="delete">Let&apos;s do this!</button>
                                 </div>
+                                <div class="col-lg-3">
+                                    <button type="button" class="btn btn-primary" style="width:100%" id="login">Change team</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,6 +131,7 @@
     }
     $(function() {
         $('#delete').click(doDelete);
+        $('#login').click(login);
         $.ajax({
             statusCode: {
                 200: function(data) {
