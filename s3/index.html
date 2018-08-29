@@ -12,25 +12,25 @@
     input {
         width: 100%;
     }
-    
+
     .row {
         margin-top: 5px;
     }
-    
+
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
-    
+
     input[type=number] {
         -moz-appearance: textfield;
     }
-    
+
     body {
         max-width: 1200px;
     }
-    
+
     .panel-info {
         border-color: #000000;
     }
@@ -94,12 +94,15 @@
     <!--<script src="https://websanova.com/lib/url-tld.2.1.0.min.js"></script>-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script type="text/javascript">
+    var deleting = false;
+
     function login() {
         window.location.href = '/api/login';
     }
 
     function deleteFiles(files) {
-        if(files.length > 0) {
+        if(deleting && files.length > 0) {
+            $('#delete').text(files.length + ' files to delete.  Abort!');
             var id = files.pop();
             $.ajax({
                 url: '/api/files/' + id,
@@ -112,11 +115,17 @@
     }
 
     function doDelete() {
+        if(deleting) {
+            deleting = false;
+            $('#delete').text('Let&apos;s do this!');
+            return;
+        }
+        deleting = true;
         var days = parseInt($('#days').val());
         var stars = parseInt($('#stars').val());
         var savePattern = encodeURIComponent($('#savePattern').val());
 
-        var queryString = '?days=' + ( isNaN(days) ? '' : days ) + '&stars=' + ( isNaN(stars) ? '' : stars ) + '&savePattern=' + savePattern;        
+        var queryString = '?days=' + ( isNaN(days) ? '' : days ) + '&stars=' + ( isNaN(stars) ? '' : stars ) + '&savePattern=' + savePattern;
 
         $.ajax({
             url: '/api/files' + queryString,
