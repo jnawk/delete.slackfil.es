@@ -117,7 +117,7 @@
     function doDelete() {
         if(deleting) {
             deleting = false;
-            $('#delete').text('Let&apos;s do this!');
+            $('#delete').text('Let\'s do this!');
             return;
         }
         deleting = true;
@@ -146,7 +146,7 @@
                 200: function(data) {
                     $('#welcome').text("Welcome, " + data.user);
                     $('#team').text(data.team.name);
-                    $('#delete').text('Let&apos;s do this!');
+                    $('#delete').text('Let\'s do this!');
                     $('#delete').prop('disabled', false);
                 },
                 401: login
