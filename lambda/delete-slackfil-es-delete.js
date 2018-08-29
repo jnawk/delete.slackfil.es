@@ -5,10 +5,10 @@ var https = require('https');
 var algorithm = 'aes-256-ctr';
 
 function decrypt(text){
-  var decipher = crypto.createDecipher(algorithm, process.env.CRYPTO_PSK);
-  var dec = decipher.update(text,'hex','utf8');
-  dec += decipher.final('utf8');
-  return dec;
+    var decipher = crypto.createDecipher(algorithm, process.env.CRYPTO_PSK);
+    var dec = decipher.update(text,'hex','utf8');
+    dec += decipher.final('utf8');
+    return dec;
 }
 
 exports.handler = (event, context, callback) => {
@@ -34,9 +34,9 @@ exports.handler = (event, context, callback) => {
                 callback('error'); 
             }
         });
-    }).on('error', function(err){
-        callback('error'); 
-    });    
+    }).on('error', function(/*err*/){
+        callback('error');
+    });
     callback(null, {
         statusCode: 200,
         body: JSON.stringify('data')

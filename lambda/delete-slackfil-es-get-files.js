@@ -3,20 +3,20 @@ var crypto = require('crypto');
 var https = require('https');
 
 var algorithm = 'aes-256-ctr';
-var urlPrefix = 'https://slack.com/api/files.list'
+var urlPrefix = 'https://slack.com/api/files.list';
 
 function decrypt(text){
-  var decipher = crypto.createDecipher(algorithm, process.env.CRYPTO_PSK);
-  var dec = decipher.update(text,'hex','utf8');
-  dec += decipher.final('utf8');
-  return dec;
+    var decipher = crypto.createDecipher(algorithm, process.env.CRYPTO_PSK);
+    var dec = decipher.update(text,'hex','utf8');
+    dec += decipher.final('utf8');
+    return dec;
 }
 
 function getFiles(page, pages, token, date, stars, savePattern, callback) {
     var dataString = '';
     var filesToDelete = [];
     console.log('requesting page ' + page);
-    var req = https.get(urlPrefix + '?token=' + token + '&ts_to=' + date + '&types=images&count=1000&page=' + page, function(result){
+    https.get(urlPrefix + '?token=' + token + '&ts_to=' + date + '&types=images&count=1000&page=' + page, function(result){
         result.on('data', function(data) {
             dataString += data.toString('utf-8');
         });
@@ -60,9 +60,9 @@ function getFiles(page, pages, token, date, stars, savePattern, callback) {
             } else {
                 callback('error'); 
             }
-        })
-    }).on('error', function(err){
-        callback('error'); 
+        });
+    }).on('error', function(/*err*/){
+        callback('error');
     });
 }
 
@@ -87,7 +87,7 @@ exports.handler = (event, context, callback) => {
             callback(null, {
                 statusCode: 200,
                 body: JSON.stringify(data)
-            })
+            });
         }
     });
 };
