@@ -20,7 +20,10 @@ exports.handler = (event, context, callback) => {
         authResult.on('data', function(authData) {
             var response = JSON.parse(authData.toString('utf-8'));
             if(response.ok) {
-                const user = response.user;
+                const user = {
+                    name: response.user,
+                    id: response.user_id
+                };
                 https.get('https://slack.com/api/team.info?token=' + token, function(teamResult) {
                     teamResult.on('data', function(teamData) {
                         var response = JSON.parse(teamData.toString('utf-8'));

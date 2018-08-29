@@ -95,6 +95,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script type="text/javascript">
     var deleting = false;
+    var userId;
+    var isAdmin = true;
 
     function login() {
         window.location.href = '/api/login';
@@ -103,14 +105,24 @@
     function deleteFiles(files) {
         if(deleting && files.length > 0) {
             $('#delete').text(files.length + ' files to delete.  Abort!');
-            var id = files.pop();
-            $.ajax({
-                url: '/api/files/' + id,
-                method: 'DELETE',
-                success: function() {
-                    deleteFiles(files);
-                }
-            });
+            var file = files.pop();
+            if(isAdmin || userId == file.user) {
+                $.ajax({
+                    url: '/api/files/' + file.id,
+                    method: 'DELETE',
+                    statusCode: {
+                        200: function() {
+                            deleteFiles(files);
+                        },
+                        403: function() {
+                            isAdmin = false;
+                            deleteFiles(files);
+                        }
+                    }
+                });
+            } else {
+                deleteFiles(files);
+            }
         }
         if(files.length == 0) {
             deleting = false;
@@ -148,7 +160,8 @@
         $.ajax({
             statusCode: {
                 200: function(data) {
-                    $('#welcome').text("Welcome, " + data.user);
+                    userId = data.user.id;
+                    $('#welcome').text("Welcome, " + data.user.name);
                     $('#team').text(data.team.name);
                     $('#delete').text('Let\'s do this!');
                     $('#delete').prop('disabled', false);

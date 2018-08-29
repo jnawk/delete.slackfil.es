@@ -25,6 +25,11 @@ exports.handler = (event, context, callback) => {
                     statusCode: 200,
                     body: dataString,
                 });
+            } else if(response.error == 'cant_delete_file') {
+                callback(null, {
+                    statusCode: 403,
+                    body: dataString,
+                });
             } else {
                 callback('error'); 
             }

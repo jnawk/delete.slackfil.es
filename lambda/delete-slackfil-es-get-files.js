@@ -34,7 +34,7 @@ function getFiles(page, pages, token, date, stars, savePattern, callback) {
                     if(inUse || save) {
                         toSave++;
                     } else {
-                        filesToDelete.push(f.id);
+                        filesToDelete.push({id: f.id, user: f.user});
                     }
                 });
                 
