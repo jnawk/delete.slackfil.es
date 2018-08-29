@@ -112,6 +112,10 @@
                 }
             });
         }
+        if(files.length == 0) {
+            deleting = false;
+            $('#delete').text('Let\'s do this!');
+        }
     }
 
     function doDelete() {
