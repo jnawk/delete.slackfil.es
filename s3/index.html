@@ -104,7 +104,7 @@
 
     function deleteFiles(files) {
         if(deleting && files.length > 0) {
-            $('#delete').text(files.length + ' files to delete.  Abort!');
+          $('#delete').text(files.length + ' files to delete.  Abort!');
             var file = files.pop();
             if(isAdmin || userId == file.user) {
                 $.ajax({
@@ -137,6 +137,10 @@
             return;
         }
         deleting = true;
+
+        $('#delete').text('Fetching file list');
+        $('#delete').prop('disabled', true);
+
         var days = parseInt($('#days').val());
         var stars = parseInt($('#stars').val());
         var savePattern = encodeURIComponent($('#savePattern').val());
@@ -147,6 +151,7 @@
             url: '/api/files' + queryString,
             statusCode: {
                 200: function(data) {
+                    $('#delete').prop('disabled', false);
                     console.log(data.length + ' files to delete');
                     deleteFiles(data);
                 },
